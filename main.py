@@ -1,6 +1,13 @@
 import os
-from Caesar.main_caesar import main_caesar
-from Transposition.main_transposition import main_transposition
+import sys
+# Get the parent directory
+parent_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Add the parent directory to sys.path
+sys.path.append(parent_dir)
+
+# Import the module from the parent directory
+from script import caesar_main, transposition_main
 
 def main():
     option: int = -1
@@ -17,10 +24,11 @@ def main():
         os.system("cls")
         if option == 0: break
         else:
-            if option == 1: main_caesar()
-            elif option == 2: main_transposition()
-            elif option == 3: print("Nothing here yet...\n")
-            os.system("pause")
+            if option == 1: caesar_main.main()
+            elif option == 2: transposition_main.main()
+            elif option == 3: 
+                print("Nothing here yet...\n")
+                os.system("pause")
 
 
 if __name__ == "__main__":

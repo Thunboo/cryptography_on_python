@@ -1,5 +1,5 @@
-from transposition_cipher import encryptTransposition, decryptTransposition
-from transposition_bruteforce import bruteforce_hack_transposition as BF_Hack 
+from .caesar_cipher import encryptCaesar, decryptCaesar
+from .caesar_bruteforce import bruteforce_hack_caesar as BF_Hack 
 from pyperclip import copy as add_clipboard
 import os
 
@@ -10,7 +10,7 @@ def option_encrypt():
     my_key = int(input("Enter a key:\n"))
 
     # Copying the result to the clipboard
-    add_clipboard(encryptTransposition(message=My_Message, key=my_key))
+    add_clipboard(encryptCaesar(message=My_Message, key=my_key))
 
     print("Encrypted message was copied into clipboard!\n")
 
@@ -21,7 +21,7 @@ def option_decrypt():
     my_key = int(input("Enter a key:\n"))
 
     # Copying the result to the clipboard
-    add_clipboard(decryptTransposition(message=My_Message, key=my_key))
+    add_clipboard(decryptCaesar(message=My_Message, key=my_key))
 
     print("Decrypted message was copied into clipboard!\n")
 
@@ -32,20 +32,20 @@ def option_bruteforce():
     BF_Hack(message=My_Message)
 
 
-def main_transposition():
+def main():
     option: int = -1
     while (True):
         os.system("cls")
-        print("""Welcome to Transposition Cipher Master!
+        print("""Welcome to Caesar Cipher Master!
     Pick an option:
+    0) Leave...
     1) Encrypt a message
     2) Decrypt a message with known key
-    3) Decrypt a message using BruteForce
-    4) Leave...""")
+    3) Decrypt a message using BruteForce""")
 
         option = int(input()[:1])
         os.system("cls")
-        if option == 4: break
+        if option == 0: break
         else:
             if option == 1: option_encrypt()
             elif option == 2: option_decrypt()
@@ -54,4 +54,4 @@ def main_transposition():
 
 
 if __name__ == "__main__":
-    main_transposition()
+    main()

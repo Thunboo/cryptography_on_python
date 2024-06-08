@@ -1,7 +1,7 @@
 # TRANSPOSITION CIPHER BruteForce Hack File #
 #############################################
 
-from transposition_cipher import decryptTransposition
+from .transposition_cipher import decryptTransposition
 
 def bruteforce_hack_transposition(message: str) -> None:
     """

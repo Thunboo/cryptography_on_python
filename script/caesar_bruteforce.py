@@ -1,6 +1,6 @@
 # CAESAR CIPHER BruteForce Hack File #
 ######################################
-from caesar_cipher import SYMBOLS, decryptCaesar
+from .caesar_cipher import SYMBOLS, decryptCaesar
 
 
 def bruteforce_hack_caesar(message: str) -> None:
