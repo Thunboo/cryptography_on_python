@@ -1,9 +1,10 @@
-# CAESAR CIPHER File #
-######################
+import os
+from . import menu_options as menu
+
 
 # Defining the Alphabet and the Encryptable Symbols
-ALPHABET_STR: str = "ABCDEFGHIJKLMNOPRSTVQWXYZ"
-SYMBOLS: str = ALPHABET_STR + ALPHABET_STR.lower() + "1234567890" + " .,?!"
+ALPHABET_STR: str = "abcdefghijklmnopqrstuvwxyz"
+SYMBOLS: str = ALPHABET_STR + ALPHABET_STR.upper() + "1234567890" + " .,?!"
 SYMBOLS_SET: set = set(SYMBOLS)
 
 
@@ -26,8 +27,10 @@ def encryptCaesar(message: str = "", key: int = 0) -> None | str:
 
     If any off those symbols is NOT defined as ENCRYPTABLE -> raising an Exception
     """
-    if any(Symbol not in SYMBOLS_SET for Symbol in set(message)):
-        raise Exception("Found a non-valid symbol to be encrypted...")
+    for Symbol in set(message):
+        if Symbol not in SYMBOLS_SET:
+            print(f"UNKNOWN SYMBOL '{Symbol}'")
+            raise Exception("Found a non-valid symbol to be encrypted...")
 
     # Defining the Symbol-To-Symbol Translation Dictionary
     key = key % len(SYMBOLS) # If key is bigger than the amount of symbols -> take modulus
@@ -88,14 +91,42 @@ def decryptCaesar(message: str = "", key: int = 0) -> None | str:
     return Decrypted_message
 
 
+def bruteforce_hack_caesar(message: str) -> None:
+    """
+    BruteForces given string "message" with all possible "key"
+    Then prints out all possible outcomes of unencrypted "message"
+    :param message: message to be decrypted
+    """
+    max_len = len(SYMBOLS) # Amount of symbols <=> possible keys
+    formated = len(str(max_len))
+    print("All possible translations:\n")
+    for key in range(max_len):
+        print(f"Key = {key:{formated}.0f} | {decryptCaesar(message=message, key=key)}")
+
+
 def main():
-    My_Message: str = "This is a 1st secret message from Gleb"
-    my_key = 2
-    print(My_Message)
-    print("- Transforms into: -")
-    print(encryptCaesar(message=My_Message, key=my_key))
-    print("- Reversed operation: -")
-    print(decryptCaesar(message=encryptCaesar(message=My_Message, key=my_key), key=my_key))
+    option: int = -1
+    while (True):
+        os.system("cls")
+        print("""Welcome to Caesar Cipher Master!
+    Pick an option:
+    0) Leave...
+    1) Encrypt a message
+    2) Decrypt a message with known key
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file""")
+
+        option = int(input()[:1])
+        os.system("cls")
+        if option == 0: break
+        else:
+            if option == 1:   menu.option_encrypt(encrypt_func=encryptCaesar)
+            elif option == 2: menu.option_decrypt(decrypt_func=decryptCaesar)
+            elif option == 3: menu.option_bruteforce(bruteforce_func=bruteforce_hack_caesar)
+            elif option == 4: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "encrypt")
+            elif option == 5: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "decrypt")
+            os.system("pause")
 
 
 if __name__ == "__main__":
