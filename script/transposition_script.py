@@ -1,5 +1,6 @@
 from math import ceil
 from typing import List
+from pyperclip import copy as add_clipboard
 import os
 from . import menu_options as menu
 
@@ -62,19 +63,6 @@ def decryptTransposition(message: str = "", key: int = 0) -> None | str:
     return ''.join(Decrypted_message)
 
 
-def bruteforce_hack_transposition(message: str) -> None:
-    """
-    BruteForces given string "message" with all possible "key"
-    Then prints out all possible outcomes of unencrypted "message"
-    :param message: message to be decrypted
-    """
-    max_len = len(message) # Amount of symbols <=> possible keys
-    formated = len(str(max_len))
-    print("All possible translations:\n")
-    for key in range(1, max_len):
-        print(f"Key = {key:{formated}.0f} | {decryptTransposition(message=message, key=key)}")
-
-
 def main():
     option: int = -1
     while (True):
@@ -94,7 +82,7 @@ def main():
         else:
             if option == 1:   menu.option_encrypt(encrypt_func=encryptTransposition)
             elif option == 2: menu.option_decrypt(decrypt_func=decryptTransposition)
-            elif option == 3: menu.option_bruteforce(bruteforce_func=bruteforce_hack_transposition)
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
             elif option == 4: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "encrypt")
             elif option == 5: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "decrypt")
             os.system("pause")
