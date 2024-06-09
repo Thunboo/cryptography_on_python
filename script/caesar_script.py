@@ -103,7 +103,8 @@ def main():
     2) Decrypt a message with known key
     3) Decrypt a message using BruteForce
     4) Encrypt a file
-    5) Decrypt a file""")
+    5) Decrypt a file with known key
+    6) Decrypt a file using BruteForce""")
 
         option = int(input()[:1])
         os.system("cls")
@@ -111,9 +112,10 @@ def main():
         else:
             if option == 1:   menu.option_encrypt(encrypt_func=encryptCaesar)
             elif option == 2: menu.option_decrypt(decrypt_func=decryptCaesar)
-            elif option == 3: menu.option_bruteforce(decrypt_func=decryptCaesar, minKeyValue=0)
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptCaesar, minKeyValue=0, maxKeyValue=len(SYMBOLS))
             elif option == 4: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "encrypt")
             elif option == 5: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "decrypt")
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptCaesar, minKeyValue=0, maxKeyValue=len(SYMBOLS))
             os.system("pause")
 
 

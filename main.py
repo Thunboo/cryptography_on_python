@@ -1,12 +1,4 @@
 import os
-# import sys
-# # Get the parent directory
-# parent_dir = os.path.dirname(os.path.realpath(__file__))
-
-# # Add the parent directory to sys.path
-# sys.path.append(parent_dir)
-
-# Import the module from the parent directory
 import script.menu_options as menu
 import script.caesar_script as caesar
 import script.transposition_script as transposition

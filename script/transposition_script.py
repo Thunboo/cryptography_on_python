@@ -85,6 +85,7 @@ def main():
             elif option == 3: menu.option_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
             elif option == 4: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "encrypt")
             elif option == 5: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "decrypt")
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
             os.system("pause")
 
 
