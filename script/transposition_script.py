@@ -74,7 +74,8 @@ def main():
     2) Decrypt a message with known key
     3) Decrypt a message using BruteForce
     4) Encrypt a file
-    5) Decrypt a file""")
+    5) Decrypt a file with known key
+    6) Decrypt a file using BruteForce""")
 
         option = int(input()[:1])
         os.system("cls")
