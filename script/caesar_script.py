@@ -1,4 +1,3 @@
-from pyperclip import copy as add_clipboard
 import os
 from . import menu_options as menu
 
@@ -13,6 +12,7 @@ SYMBOLS_SET: set = set(SYMBOLS)
 def encryptCaesar(message: str = "", key: int = 0) -> None | str:
     """
     Encrypts given string "message" with given "key"
+
     :param message: message to be encrypted
     :param key: Shifting through alphabet value
     :return: Encrypted string
@@ -55,6 +55,7 @@ def encryptCaesar(message: str = "", key: int = 0) -> None | str:
 def decryptCaesar(message: str = "", key: int = 0) -> None | str:
     """
     Decrypts given string "message" with given "key"
+
     :param message: message to be decrypted
     :param key: Shifting through alphabet value
     :return: Decrypted string

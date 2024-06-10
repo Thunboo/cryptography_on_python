@@ -8,7 +8,9 @@ from . import detect_english
 def option_encrypt(encrypt_func: Callable):
     """
     Asks User for a string to be encrypted and a key
+
     Calls given Encrypting function
+
     Adds the result to the Clipboard
     """
     My_Message = input("Enter a message to be encrypted:\n")
@@ -24,7 +26,9 @@ def option_encrypt(encrypt_func: Callable):
 def option_decrypt(decrypt_func: Callable):
     """
     Asks User for a string to be decrypted and a key
+
     Calls given Decrypting function
+
     Adds the result to the Clipboard
     """
     My_Message = input("Enter a message to be decrypted:\n")
@@ -92,6 +96,7 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str):
     Calls given Encrypting / Decrypting function
     
     Writes the output to the new (or already existing) file
+
     :param encrypt_func: Function for Encrypting data
     :param decrypt_func: Function for Decrypting data
     :param mode: Can be either "encrypt" or "decrypt"
@@ -233,6 +238,8 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
                     break
                 
                 os.system("cls")
+        
+        # After the 'for' cycle:
         if output_counter == 0: # If have not found and written any file
             os.rmdir(path=path) # Then deleting created (but empty) folder
 

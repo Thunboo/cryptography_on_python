@@ -1,5 +1,4 @@
 import os
-import script.menu_options as menu
 import script.caesar_script as caesar
 import script.transposition_script as transposition
 
