@@ -17,10 +17,11 @@ def option_encrypt(encrypt_func: Callable):
     My_Message = My_Message[:len(My_Message)] # Removing '\n' symbol
     my_key = int(input("Enter a key:\n"))
 
-    # Copying the result to the clipboard
-    add_clipboard(encrypt_func(message=My_Message, key=my_key))
-
-    print("Encrypted message was copied into clipboard!\n")
+    # Copying the result to the clipboard if message can be encrypted
+    Encrypted_message: str | None = encrypt_func(message=My_Message, key=my_key)
+    if Encrypted_message != None:
+        add_clipboard(Encrypted_message)
+        print("Encrypted message was copied into clipboard!\n")
 
 
 def option_decrypt(decrypt_func: Callable):

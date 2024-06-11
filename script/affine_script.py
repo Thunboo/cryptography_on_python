@@ -5,8 +5,6 @@ from time import time
 from . import menu_options as menu
 from .caesar_script import SYMBOLS
 
-# Cleaning up the Terminal
-# # # NOTE! CURRENTLY WORKS ONLY WITH WINDOWS => ADD OS RECOGNITION
 LENGTH_SYMBOLS: int = len(SYMBOLS)
 
 
@@ -80,11 +78,8 @@ def generateRandomKey() -> int:
 
 def getNewKey() -> int | None:
     """
-    Receives an array of keys that can't be used to encrypt message
-    
-    Asks User for other key: can either type in new valid key or Quit
+    Asks User for new key: can either Type in new valid key or Quit
 
-    :param invalidKeys: key values that can't be used during encryption process
     :return: A new key or None (no new key, quitting encryption process)
     """
     noNewKey: bool = True
@@ -113,7 +108,6 @@ def getNewKey() -> int | None:
         if userInput.isdigit():
             key = int(userInput)
             if isValid(key):
-                noNewKey = False
                 return key
 
 
@@ -134,7 +128,7 @@ def getKeyParts(key: int) -> Tuple[int, int] | Tuple[None, None]:
     return (key_A, key_B)
 
 
-def multiplicativeEncryption(message: str, key: int):
+def encryptAffine(message: str, key: int) -> str | None:
     """
     Encrypts given string "message" with given "key"
 
@@ -145,11 +139,65 @@ def multiplicativeEncryption(message: str, key: int):
     
     # If Users decided to Quit Encrypting
     if key_A == None:
-        return
+        print("Quitting...")
+        return None
     
     # Getting a translation for each known symbol
-    TranslationDictionary: dict = {}
+    Translation_Dictionary: dict = {}
     for id in range(LENGTH_SYMBOLS):
         shiftedId = (id * key_A + key_B) % LENGTH_SYMBOLS
-        TranslationDictionary[SYMBOLS[id]] =  SYMBOLS[shiftedId]
+        Translation_Dictionary[SYMBOLS[id]] =  SYMBOLS[shiftedId]
 
+    # Encrypting a message
+    Encrypted_message: List[str] = ['']
+    for i in range(len(message)):
+        Encrypted_message.append(Translation_Dictionary[message[i]])
+    
+    return ''.join(Encrypted_message)
+
+
+def decryptAffine(message: str, key: int) -> str | None:
+    
+    """
+    Decrypts given string "message" with given "key"
+
+    :param message: Message to be decrypted
+    :param key: Key for producing keys for both Multiplicational and Caesar encryption
+    """
+    # If that key could not be used to encrypt data => you can't decrypt data with it
+    if not isValid(key):
+        return None
+    
+    key_A, key_B = getKeyParts(key)
+    ...
+
+
+def main():
+    option: int = -1
+    while (True):
+        os.system("cls")
+        print("""Welcome to Affine Cipher Master!
+    Pick an option:
+    0) Leave...
+    1) Encrypt a message
+    2) Decrypt a message with known key
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file with known key
+    6) Decrypt a file using BruteForce""")
+
+        option = int(input()[:1])
+        os.system("cls")
+        if option == 0: break
+        else:
+            if option == 1:   menu.option_encrypt(encrypt_func=encryptAffine)
+            elif option == 2: menu.option_decrypt(decrypt_func=decryptAffine)
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            elif option == 4: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "encrypt")
+            elif option == 5: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "decrypt")
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            os.system("pause")
+
+
+if __name__ == "__main__":
+    main()
