@@ -5,7 +5,7 @@ from time import time
 from . import detect_english
 
 
-def option_encrypt(encrypt_func: Callable):
+def option_encrypt(encrypt_func: Callable, key_type: str = "int"):
     """
     Asks User for a string to be encrypted and a key
 
@@ -13,18 +13,22 @@ def option_encrypt(encrypt_func: Callable):
 
     Adds the result to the Clipboard
     """
-    My_Message = input("Enter a message to be encrypted:\n")
-    My_Message = My_Message[:len(My_Message)] # Removing '\n' symbol
-    my_key = int(input("Enter a key:\n"))
+    my_Message = input("Enter a message to be encrypted:\n")
+    my_Message = my_Message[:len(my_Message)] # Removing '\n' symbol
 
+    if key_type == "int":
+        my_key = int(input("Enter a Key: (int)\n"))
+    else:
+        my_key = input("Enter a Key: (str)\n")
+    
     # Copying the result to the clipboard if message can be encrypted
-    Encrypted_message: str | None = encrypt_func(message=My_Message, key=my_key)
+    Encrypted_message: str | None = encrypt_func(message=my_Message, key=my_key)
     if Encrypted_message != None:
         add_clipboard(Encrypted_message)
         print("Encrypted message was copied into clipboard!\n")
 
 
-def option_decrypt(decrypt_func: Callable):
+def option_decrypt(decrypt_func: Callable, key_type: str = "int"):
     """
     Asks User for a string to be decrypted and a key
 
@@ -32,15 +36,20 @@ def option_decrypt(decrypt_func: Callable):
 
     Adds the result to the Clipboard
     """
-    My_Message = input("Enter a message to be decrypted:\n")
-    My_Message = My_Message[:len(My_Message)] # Removing '\n' symbol
-    my_key = int(input("Enter a key:\n"))
-
-    # Copying the result to the clipboard
-    add_clipboard(decrypt_func(message=My_Message, key=my_key))
-
-    print("Decrypted message was copied into clipboard!\n")
-
+    my_Message = input("Enter a message to be decrypted:\n")
+    my_Message = my_Message[:len(my_Message)] # Removing '\n' symbol
+    
+    if key_type == "int":
+        my_key = int(input("Enter a Key: (int)\n"))
+    else:
+        my_key = input("Enter a Key: (str)\n")
+    
+    # Copying the result to the clipboard if message can be decrypted
+    Decrypted_message: str | None = decrypt_func(message=my_Message, key=my_key)
+    if Decrypted_message != None:
+        add_clipboard(Decrypted_message)
+        print("Decrypted message was copied into clipboard!\n")
+    
 
 def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue: int | str = "len(message)"):
     """
@@ -53,28 +62,28 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
     :param maxKeyValue: Ending Value for loop through all possible keys. \n
     NOTE: If (maxKeyValue = "len(message)") is passed - uses length of inputed messaged during work
     """
-    My_Message = input("Enter a message to be decrypted:\n")
-    My_Message = My_Message[:len(My_Message)] # Removing '\n' symbol
+    my_Message = input("Enter a message to be decrypted:\n")
+    my_Message = my_Message[:len(my_Message)] # Removing '\n' symbol
 
     if maxKeyValue == "len(message)":
-        maxKeyValue = len(My_Message)
+        maxKeyValue = len(my_Message)
     
     detection = True
     print("\nDo you wish to DISABLE English text detection?\n")
     print("Yes - 'Y'\nor\nNo - 'N'")
     userInput = input(" > ")[:1]
-    if userInput.upper().startswith('Y'):
+    if userInput.strip().upper().startswith('Y'):
         detection = False
 
     if not detection:
         formated = len(str(maxKeyValue))
         print("All possible translations:\n")
         for key in range(minKeyValue, maxKeyValue):
-            print(f"Key = {key:{formated}.0f} | {decrypt_func(message=My_Message, key=key)}...")
+            print(f"Key = {key:{formated}.0f} | {decrypt_func(message=my_Message, key=key)}...")
     else:
         for key in range(minKeyValue, maxKeyValue):
             
-            decryptedText = decrypt_func(message=My_Message, key=key)
+            decryptedText = decrypt_func(message=my_Message, key=key)
             
             # Some decryption functions may return None if decryption with given key is impossible
             if decryptedText == None:
@@ -87,7 +96,7 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
                 print("Do you wish to Continue - 'C' bruteforcing message?\n")
                 print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
                 response = input(" > ")
-                if not response.upper().startswith('C'):
+                if not response.strip().upper().startswith('C'):
                     add_clipboard(decryptedText)
                     print("\nLast possible decryption was copied into Clipboard\n")
                     break
@@ -95,7 +104,7 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
                 os.system("cls")
 
 
-def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str):
+def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_type: str = "int"):
     """
     Asks User for a .txt file to be Encrypted / Decrypted and a key
 
@@ -124,11 +133,14 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str):
         print(f"This will overwrite \n'{output_filename}'\n")
         print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
         response = input(" > ")
-        if not response.upper().startswith('C'):
+        if not response.strip().upper().startswith('C'):
             return
         
-    # Inputting a key value
-    key: int = int(input("Enter a key\n"))
+    # Inputting an int key value
+    if key_type == "int":
+        key: int = int(input("Enter a key\n"))
+    else:
+        key: int = -1
 
     # Opening file, reading it, closing it
     file_obj = open(file=filename, mode='r')
@@ -184,7 +196,7 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
     print("\nDo you wish to disable English text detection?\n")
     print("Yes - 'Y'\nor\nNo - 'N'")
     userInput = input(" > ")[:1]
-    if userInput.upper().startswith('Y'):
+    if userInput.strip().upper().startswith('Y'):
         detection = False
 
     # Begining decrypting
@@ -217,6 +229,10 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
         for key in range(minKeyValue, maxKeyValue):
             # Get a variant of decrypted text
             decryptedText = decrypt_func(message=content, key=key)
+            
+            # Some decryption functions may return None if decryption with given key is impossible
+            if decryptedText == None:
+                continue
 
             # Check whether it meets the requirement of being English Text
             if detect_english.isEnglish(message=decryptedText):
@@ -240,7 +256,7 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
                 print("Do you wish to Continue - 'C' bruteforcing message?\n")
                 print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
                 response = input(" > ")
-                if not response.upper().startswith('C'): # If User choosen NOT to Continue BruteForcing
+                if not response.strip().upper().startswith('C'): # If User choosen NOT to Continue BruteForcing
                     break
                 
                 os.system("cls")

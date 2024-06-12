@@ -2,6 +2,7 @@ import os
 import script.caesar_script as caesar
 import script.transposition_script as transposition
 import script.affine_script as affine
+import script.simplesub_script as simpSub
 
 def main():
     option: int = -1
@@ -14,7 +15,8 @@ def main():
     1) Caesar Cipher
     2) Transposition Cipher
     3) Affine Cipher
-    4) ...""")
+    4) Simple Substitution Cipher
+    5) ...""")
 
         option = int(input()[:1])
         os.system("cls")
@@ -23,7 +25,8 @@ def main():
             if option == 1: caesar.main()
             elif option == 2: transposition.main()
             elif option == 3: affine.main()
-            elif option == 4: 
+            elif option == 4: simpSub.main()
+            elif option == 5: 
                 print("Nothing here yet...\n")
                 os.system("pause")
 

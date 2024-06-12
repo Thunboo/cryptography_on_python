@@ -77,6 +77,7 @@ def generateRandomKey() -> int:
             print(f"Generated key: {key}")
             return key
 
+
 def getNewKey() -> int | None:
     """
     Asks User for new key: can either Type in new valid key or Quit
@@ -95,11 +96,11 @@ def getNewKey() -> int | None:
         userInput: str = input(" > ")
 
         # If User chooses to quit this type of encrypting
-        if userInput.upper().startswith('Q'):
+        if userInput.strip().upper().startswith('Q'):
             return None
         
         # If User chooses to generate a random key for encrypting
-        if userInput.upper().startswith('R'):
+        if userInput.strip().upper().startswith('R'):
             return generateRandomKey()
         
         # Removing spaces in order for isdigit() method to work properly
