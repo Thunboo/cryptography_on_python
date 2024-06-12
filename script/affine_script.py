@@ -1,5 +1,5 @@
 import os
-from typing import Tuple, List, function
+from typing import Tuple, List
 from random import seed, randint
 from time import time
 from . import menu_options as menu
@@ -21,7 +21,7 @@ def greatestCommonDivisor(a: int, b: int) -> int:
     return b
 
 
-def modularInverse(a: int, b: int) -> int | None:
+# def modularInverse(a: int, b: int) -> int | None:
     """
     For given modular expression: (a * i) % b = 1
     
@@ -73,8 +73,9 @@ def generateRandomKey() -> int:
         key_A: int = randint(2, LENGTH_SYMBOLS) # First condition will always be True
         key_B: int = randint(1, LENGTH_SYMBOLS) # Third condition will always be True
         if greatestCommonDivisor(key_A, LENGTH_SYMBOLS) == 1: # Second condition check
-            return key_A * LENGTH_SYMBOLS + key_B
-
+            key: int = key_A * LENGTH_SYMBOLS + key_B
+            print(f"Generated key: {key}")
+            return key
 
 def getNewKey() -> int | None:
     """
@@ -148,10 +149,14 @@ def encryptAffine(message: str, key: int) -> str | None:
         shiftedId = (id * key_A + key_B) % LENGTH_SYMBOLS
         Translation_Dictionary[SYMBOLS[id]] =  SYMBOLS[shiftedId]
 
+
     # Encrypting a message
     Encrypted_message: List[str] = ['']
-    for i in range(len(message)):
-        Encrypted_message.append(Translation_Dictionary[message[i]])
+    for symbol in message:
+        if symbol in Translation_Dictionary:
+            Encrypted_message.append(Translation_Dictionary[symbol])
+        else:
+            Encrypted_message.append(symbol)
     
     return ''.join(Encrypted_message)
 
@@ -169,8 +174,29 @@ def decryptAffine(message: str, key: int) -> str | None:
         return None
     
     key_A, key_B = getKeyParts(key)
-    ...
+    
+    # Getting a translation for each known symbol
+    Translation_Dictionary: dict = {}
+    # # Euclid Magic ✨ Style
+    # modInv_A: int = modularInverse(key_A, LENGTH_SYMBOLS)
+    # for id in range(LENGTH_SYMBOLS):
+    #     shiftedId = (id - key_B) * modInv_A % LENGTH_SYMBOLS
+    #     Translation_Dictionary[SYMBOLS[id]] =  SYMBOLS[shiftedId]
+    
+    # No Euclid's Magic
+    for id in range(LENGTH_SYMBOLS):
+        shiftedId = (id * key_A + key_B) % LENGTH_SYMBOLS
+        Translation_Dictionary[SYMBOLS[shiftedId]] =  SYMBOLS[id]
 
+    # Decrypting a message
+    Decrypted_message: List[str] = ['']
+    for symbol in message:
+        if symbol in Translation_Dictionary:
+            Decrypted_message.append(Translation_Dictionary[symbol])
+        else:
+            Decrypted_message.append(symbol)
+    
+    return ''.join(Decrypted_message)
 
 def main():
     option: int = -1
@@ -192,10 +218,10 @@ def main():
         else:
             if option == 1:   menu.option_encrypt(encrypt_func=encryptAffine)
             elif option == 2: menu.option_decrypt(decrypt_func=decryptAffine)
-            elif option == 3: menu.option_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
             elif option == 4: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "encrypt")
             elif option == 5: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "decrypt")
-            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
             os.system("pause")
 
 

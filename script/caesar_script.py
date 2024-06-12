@@ -113,10 +113,10 @@ def main():
         else:
             if option == 1:   menu.option_encrypt(encrypt_func=encryptCaesar)
             elif option == 2: menu.option_decrypt(decrypt_func=decryptCaesar)
-            elif option == 3: menu.option_bruteforce(decrypt_func=decryptCaesar, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptCaesar, maxKeyValue=len(SYMBOLS))
             elif option == 4: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "encrypt")
             elif option == 5: menu.option_file(encrypt_func=encryptCaesar, decrypt_func=decryptCaesar, mode = "decrypt")
-            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptCaesar, minKeyValue=0, maxKeyValue=len(SYMBOLS))
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptCaesar, maxKeyValue=len(SYMBOLS))
             os.system("pause")
 
 

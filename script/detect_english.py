@@ -53,7 +53,7 @@ def countEngWordsPercentage(message: str) -> float:
     return counter / len(possibleWords)
 
 
-def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float = 85) -> bool:
+def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float = 75) -> bool:
     """
     Checks whether the given message is written in English
 
@@ -71,6 +71,7 @@ def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float
     lettersCounter = len(removeNonValidChars(message=message))    # All valid letters counted
     lettersRatio: float = lettersCounter / len(message)           # Ratio Valid / All letters
     lettersMatch: bool  = lettersRatio * 100 >= lettersPercentage # Comparing calculated (%) to the searching (%)
+    # print(f"WM : {countEngWordsPercentage(message=message)}\nLM : {lettersRatio}") # FOR DEBUGGING
     return wordsMatch and lettersMatch
 
 

@@ -42,7 +42,7 @@ def option_decrypt(decrypt_func: Callable):
     print("Decrypted message was copied into clipboard!\n")
 
 
-def option_bruteforce(decrypt_func: Callable, minKeyValue: int, maxKeyValue: int | str = "len(message)"):
+def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue: int | str = "len(message)"):
     """
     Asks User for a string to be Decrypted
 
@@ -60,7 +60,7 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int, maxKeyValue: int
         maxKeyValue = len(My_Message)
     
     detection = True
-    print("\nDo you wish to disable English text detection?\n")
+    print("\nDo you wish to DISABLE English text detection?\n")
     print("Yes - 'Y'\nor\nNo - 'N'")
     userInput = input(" > ")[:1]
     if userInput.upper().startswith('Y'):
@@ -73,7 +73,12 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int, maxKeyValue: int
             print(f"Key = {key:{formated}.0f} | {decrypt_func(message=My_Message, key=key)}...")
     else:
         for key in range(minKeyValue, maxKeyValue):
+            
             decryptedText = decrypt_func(message=My_Message, key=key)
+            
+            # Some decryption functions may return None if decryption with given key is impossible
+            if decryptedText == None:
+                continue
 
             if detect_english.isEnglish(message=decryptedText):
                 os.system("cls")
