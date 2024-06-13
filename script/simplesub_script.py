@@ -144,6 +144,10 @@ def decryptSub(message: str, key: Any) -> str | None:
     return translateMessage(message=message, key=key, mode="decrypt")
     
 
+def bruteforceHack(message: str):
+    from .detect_english import wordPattern
+
+
 def main():
     option: int = -1
     while (True):

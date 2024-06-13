@@ -1,4 +1,5 @@
 from typing import List
+import os
 
 ALPHABET_STR: str = "abcdefghijklmnopqrstuvwxyz"
 LETTERS_SPACES: str = ALPHABET_STR + ALPHABET_STR.upper() + " \t\n"
@@ -10,8 +11,13 @@ def loadDictioanary() -> dict:
     Loads a Dictionary into memory
     :return: Loaded Dictionary
     """
+    dictionaryFileRoot: str = "script/dictionary.txt"
+    if not os.path.exists(dictionaryFileRoot):
+        print(f"{dictionaryFileRoot} \ndoes not exist...")
+        return
+    
     englishWords: dict = {}
-    with open(file="script/dictionary.txt") as dictionaryFile:
+    with open(file=dictionaryFileRoot) as dictionaryFile:
         for word in dictionaryFile.read().split('\n'):
             englishWords[word] = None
     return englishWords
@@ -75,9 +81,87 @@ def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float
     return wordsMatch and lettersMatch
 
 
+def getWordPattern(word: str) -> str | None:
+    """
+    Counts occurancies of each english letter in given Word
+
+    Example: 
+            Puppy -> 0.1.0.0.2
+
+            Transformator -> 0.1.2.3.4.5.6.1.7.2.0.6.1
+    """
+    pattern: str = ""
+    added_letter: dict = {}
+    cnt: int = 0
+    
+    if any(symbol not in set(ALPHABET_STR) for symbol in set(word.lower())):
+        return None
+
+    for letter in word.lower():
+        if letter not in added_letter:
+            added_letter[letter] = cnt
+            cnt += 1
+        pattern += str(added_letter[letter]) + '.'
+    
+    pattern = pattern[:len(pattern) - 1]
+    return pattern
+
+
+def createPatternsDictionary(createFile: bool = True) -> dict:
+    if createFile:
+        patternsFileRoot: str = "script/patterns_dictionary.txt"
+        patternsFile = open(file=patternsFileRoot, mode="w")
+
+    ENGLISH_WORDS = loadDictioanary()
+    patternsDictionary: dict = {}
+
+    for word in ENGLISH_WORDS:
+        wordPattern = getWordPattern(word)
+        try:
+            patternsDictionary[wordPattern].append(word)
+        except KeyError:
+            patternsDictionary[wordPattern] = []
+            patternsDictionary[wordPattern].append(word)
+    
+    if createFile:
+        for key, value in patternsDictionary.items():
+            patternsFile.write(f"{key}|{value}\n")
+        patternsFile.close()
+    
+    return patternsDictionary
+
+
+def getPatternsDictionary() -> dict:
+    dictionaryFileRoot: str = "script/patterns_dictionary.txt"
+
+    if not os.path.exists(dictionaryFileRoot) or (open(file=dictionaryFileRoot).readline() == ""):
+        print("There is no Patterns Dictionary")
+        print("Creating One...")
+        return createPatternsDictionary()        
+    else:
+        patternsDictionary: dict = {}
+        patternsFile = open(file=dictionaryFileRoot)
+        for line in patternsFile:
+            Key, Value = line[:-1].split("|")
+            Value = Value.replace('[', '').replace(']', '').replace(' ','').replace('\'', '')
+            Value = list(Value.split(','))
+            patternsDictionary[Key] = Value
+        patternsFile.close()
+        return patternsDictionary
+
+
 def main():
     message: str = "Is th15 4n 3nGl15h sentence 0r it is not?"
     print(f"Message \"{message}\"\nIs English: {isEnglish(message=message, lettersPercentage=70)}")
+
+    puppy: str = "puppy"
+    hydrotransformator: str = "hydrotransformator"
+    print(f"{puppy} -> {getWordPattern(puppy)}")
+    print(f"{hydrotransformator} -> {getWordPattern(hydrotransformator)}")
+
+    PD: dict = getPatternsDictionary()
+    print(PD[getWordPattern(puppy)])
+
 
 
 if __name__ == "__main__":
