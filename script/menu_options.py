@@ -89,10 +89,13 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
             if decryptedText == None:
                 continue
 
-            if detect_english.isEnglish(message=decryptedText):
+            if detect_english.isEnglish(message=decryptedText, lettersPercentage=85):
                 os.system("cls")
 
-                print(f"\nPossible encrypted text (key = {key}):\n{decryptedText[:100]}...")
+                if len(decryptedText) > 100:
+                    print(f"\nPossible encrypted text (key = {key}):\n{decryptedText[:100]}...")
+                else:
+                    print(f"\nPossible encrypted text (key = {key}):\n{decryptedText}")
                 print("Do you wish to Continue - 'C' bruteforcing message?\n")
                 print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
                 response = input(" > ")

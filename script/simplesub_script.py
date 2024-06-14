@@ -1,10 +1,12 @@
 import os
 from copy import deepcopy
-from random import seed, randint, shuffle
+from random import seed, shuffle
 from typing import Any
 from time import time
+from pyperclip import copy as add_clipboard
 from . import menu_options as menu
 from .caesar_script import ALPHABET_STR
+from .detect_english import getPatternsDictionary, getWordPattern, removeNonValidChars, loadDictionary
 
 ALPHABET: list[str] = list(ALPHABET_STR.upper())
 ALPHABET_SET: set = set(ALPHABET_STR.upper())
@@ -54,7 +56,7 @@ def getNewKey() -> int | None:
         os.system("cls")
 
         print("This is single RULE for valid key for Simple Substitution Encryption:")
-        print(f"    1) Key contains all letters from \"{ALPHABET_STR}\"")
+        print(f"    1) Key contains all letters from \"{ALPHABET_STR}\"\n")
         print("Enter a new key (str) or Use Random key - type in 'Random'\nor\nQuit - Just hit 'Enter'")
         userInput: str = input(" > ")
 
@@ -143,9 +145,132 @@ def decryptSub(message: str, key: Any) -> str | None:
     """
     return translateMessage(message=message, key=key, mode="decrypt")
     
+#####################################################
 
-def bruteforceHack(message: str):
-    from .detect_english import wordPattern
+def blankLetterMapping() -> dict:
+    """
+    Return a BLANK dictionary where for each letter an empty array being set
+    
+    :return: Blank Letter Mapping Dictionary: {'A': [ ], ... , 'Z': [ ]}
+    """
+    blankDict: dict = {}
+    for letter in ALPHABET:
+        blankDict[letter] = []
+    return blankDict
+
+
+def fillLetterMapping(word: str, candidate: str) -> dict:
+    """
+    For given word and it is possible decryption returns a possible decryption for each letter
+    """
+    letterMapping: dict = blankLetterMapping()
+    for id in range(len(word)):
+        # If possible decryption for letter is not represented as a variant -> add it
+        if candidate[id] not in letterMapping[word[id]]:
+            letterMapping[word[id]].append(candidate[id])
+    
+    return letterMapping
+
+
+def intersectLetterMapping(map_A: dict, map_B: dict) -> dict:
+    """
+    For two given Letters Mappings intersects them leaving only those letters which are represented in both Mappings
+    """
+    intersection: dict = blankLetterMapping()
+
+    for letter in ALPHABET:
+        if map_A[letter] == []:    # If A = [] => any letter => copy B
+            intersection[letter] == deepcopy(map_B[letter])
+        elif map_B[letter] == []:  # If B = [] => any letter => copy A
+            intersection[letter] == deepcopy(map_A[letter])
+        else:
+            for mappedLetter in map_A[letter]:
+                if mappedLetter in map_B[letter]:
+                    intersection[letter].append(mappedLetter)
+    
+    return intersection
+
+
+def removeSolvedLetter(letterMapping: dict):
+    """
+    Removes all letters decryption variant from given Letter Mapping 
+    if can determine a single one decryption for single letter
+    """
+    looping: bool = True
+    while (looping):
+        looping = False
+        solvedLetters: list[str] = []
+
+        for letter in ALPHABET:
+            # If letter is determined to be decrypted with single variant
+            if len(letterMapping[letter]) == 1:
+                # Appending its ONLY POSSIBLE decryption
+                solvedLetters.append(letterMapping[letter][0])
+        
+        for letter in ALPHABET:
+            for sl in solvedLetters:
+                variants: int = len(letterMapping[letter])
+                if (variants != 1) and (sl in letterMapping[letter]):
+                    letterMapping[letter].remove(sl)
+                    if variants - 1 == 1:
+                        looping = True
+
+
+def getMessage() -> str | None:
+    message = input("Enter a message to be decrypted:\n")
+    if len(message) == 0:
+        return None
+    message = message[:len(message)] # Removing '\n' symbol
+    return message
+    
+
+def bruteforceHack(message: str | None = None):
+    """
+    Bruteforces an inputted or given message and decrypts it if possible
+
+    If ended up with decrypted message -> Adds it to a clipboard
+    """
+    if message == None:
+        message: str | None = getMessage()
+    if message == None:
+        return
+    
+    patterns_dictionary: dict = getPatternsDictionary()
+    letterMapping: dict = blankLetterMapping()
+
+    message = removeNonValidChars(message)
+    words: list[str] = message.upper().split()
+    ENGLISH_WORDS: dict = loadDictionary()
+
+    for word in words:
+        """ 
+        We might have ended up with something like this:
+            The word was: m3SS4g3 (stands for message)
+            But after convertion it becomes: MSSG -> "0.1.1.2" pattern
+            WHICH IS WRONG!
+
+            NOTE! Correct pattern for m3SS4g3 -> "0.1.2.2.3.4.1"
+            So if we have transformed word like "m3SS4g3" into "MSSG":
+            We check whether this thing even an Enclish Word
+        """
+        if word not in ENGLISH_WORDS:
+            continue
+        pattern: str = getWordPattern(word)
+        candidates: list[str] = patterns_dictionary[pattern]
+        for candidate in candidates:
+            newMapping: dict = fillLetterMapping(word, candidate)
+            letterMapping = intersectLetterMapping(letterMapping, newMapping)
+    
+    removeSolvedLetter(letterMapping)
+    
+    encryptionKey: list[str] = [""]
+    for _, value in letterMapping.items():
+        encryptionKey.append(value)
+    key: str = ''.join(encryptionKey)
+    
+    add_clipboard(decryptSub(message, key))
+    print("Decrypted message was copied into clipboard!\n")
+    return
 
 
 def main():
@@ -157,8 +282,9 @@ def main():
     0) Leave...
     1) Encrypt a message
     2) Decrypt a message with known key
-    3) Encrypt a file
-    4) Decrypt a file with known key""")
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file with known key""")
 
         option = int(input()[:1])
         os.system("cls")
@@ -166,6 +292,7 @@ def main():
         else:
             if option == 1:   menu.option_encrypt(encrypt_func=encryptSub, key_type="str")
             elif option == 2: menu.option_decrypt(decrypt_func=decryptSub, key_type="str")
+            elif option == 3: bruteforceHack()
             elif option == 4: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "encrypt", key_type="str")
             elif option == 5: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "decrypt", key_type="str")
             os.system("pause")

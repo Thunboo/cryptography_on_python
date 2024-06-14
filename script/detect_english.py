@@ -6,7 +6,7 @@ LETTERS_SPACES: str = ALPHABET_STR + ALPHABET_STR.upper() + " \t\n"
 LETTERS_SPACES_SET: set = set(LETTERS_SPACES)
 # # # ADD function that allows to import Alphabet => All Valid Symbols from .txt
 
-def loadDictioanary() -> dict:
+def loadDictionary() -> dict:
     """
     Loads a Dictionary into memory
     :return: Loaded Dictionary
@@ -26,6 +26,9 @@ def loadDictioanary() -> dict:
 def removeNonValidChars(message: str) -> str:
     """
     Removes all Non-Valid (unknown) characters from given string
+
+    Only English Alphabet letters (upper and lower case) and spaces ('*space*', '\\t', '\\n') are considered to be "VALID"
+
     :param message: String to be edited
     :return: Edited string
     """
@@ -42,7 +45,7 @@ def countEngWordsPercentage(message: str) -> float:
     :param message: String being checked
     :return: Percentage (%) : Counted / All_Words
     """
-    ENGLISH_WORDS = loadDictioanary()
+    ENGLISH_WORDS = loadDictionary()
     
     message = message.upper() # Our dictionary of Eng words are all UPPER written
     message = removeNonValidChars(message=message)
@@ -80,6 +83,7 @@ def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float
     # print(f"WM : {countEngWordsPercentage(message=message)}\nLM : {lettersRatio}") # FOR DEBUGGING
     return wordsMatch and lettersMatch
 
+# ^ Check for English words part ###############################
 
 def getWordPattern(word: str) -> str | None:
     """
@@ -89,6 +93,8 @@ def getWordPattern(word: str) -> str | None:
             Puppy -> 0.1.0.0.2
 
             Transformator -> 0.1.2.3.4.5.6.1.7.2.0.6.1
+
+            M3ss4g3 -> None (explanation: '3' and '4' are not letters in English Alphabet)
     """
     pattern: str = ""
     added_letter: dict = {}
@@ -108,11 +114,20 @@ def getWordPattern(word: str) -> str | None:
 
 
 def createPatternsDictionary(createFile: bool = True) -> dict:
+    """
+    This function creates a Dictionary of patterns of all words from local English Words Dictionary
+
+    For each word is sets corresponding Word Pattern (getWordPattern function) as a Key
+
+    Then each word that matches this pattern will correspond to this pattern as a Value for Key in python dictionary
+    
+    :return: Dictionary : Key (or pattern) -> [Words]
+    """
     if createFile:
         patternsFileRoot: str = "script/patterns_dictionary.txt"
         patternsFile = open(file=patternsFileRoot, mode="w")
 
-    ENGLISH_WORDS = loadDictioanary()
+    ENGLISH_WORDS = loadDictionary()
     patternsDictionary: dict = {}
 
     for word in ENGLISH_WORDS:
@@ -132,6 +147,13 @@ def createPatternsDictionary(createFile: bool = True) -> dict:
 
 
 def getPatternsDictionary() -> dict:
+    """
+    Parces a data from already existing Dictionary of Patterns
+
+    If Dictionary does not exist (.txt file) - creates one via createPatternsDictionary() function
+
+    :return: Dictionary of Patterns : Key (pattern) -> [Words]
+    """
     dictionaryFileRoot: str = "script/patterns_dictionary.txt"
 
     if not os.path.exists(dictionaryFileRoot) or (open(file=dictionaryFileRoot).readline() == ""):
@@ -149,18 +171,20 @@ def getPatternsDictionary() -> dict:
         patternsFile.close()
         return patternsDictionary
 
+# ^ Check for words patterns part ##############################
 
 def main():
     message: str = "Is th15 4n 3nGl15h sentence 0r it is not?"
     print(f"Message \"{message}\"\nIs English: {isEnglish(message=message, lettersPercentage=70)}")
 
     puppy: str = "puppy"
-    hydrotransformator: str = "hydrotransformator"
+    world: str = "world"
     print(f"{puppy} -> {getWordPattern(puppy)}")
-    print(f"{hydrotransformator} -> {getWordPattern(hydrotransformator)}")
+    print(f"{world} -> {getWordPattern(world)}")
 
     PD: dict = getPatternsDictionary()
     print(PD[getWordPattern(puppy)])
+    print(PD["0.1.1.2"])
 
 
 
