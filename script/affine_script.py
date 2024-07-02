@@ -199,6 +199,7 @@ def decryptAffine(message: str, key: int) -> str | None:
     
     return ''.join(Decrypted_message)
 
+
 def main():
     option: int = -1
     while (True):

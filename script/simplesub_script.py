@@ -159,11 +159,11 @@ def blankLetterMapping() -> dict:
     return blankDict
 
 
-def fillLetterMapping(word: str, candidate: str) -> dict:
+def fillLetterMapping(letterMapping: dict, word: str, candidate: str) -> dict:
     """
     For given word and it is possible decryption returns a possible decryption for each letter
     """
-    letterMapping: dict = blankLetterMapping()
+    # letterMapping: dict = blankLetterMapping()
     for id in range(len(word)):
         # If possible decryption for letter is not represented as a variant -> add it
         if candidate[id] not in letterMapping[word[id]]:
@@ -180,14 +180,14 @@ def intersectLetterMapping(map_A: dict, map_B: dict) -> dict:
 
     for letter in ALPHABET:
         if map_A[letter] == []:    # If A = [] => any letter => copy B
-            intersection[letter] == deepcopy(map_B[letter])
+            intersection[letter] = deepcopy(map_B[letter])
         elif map_B[letter] == []:  # If B = [] => any letter => copy A
-            intersection[letter] == deepcopy(map_A[letter])
+            intersection[letter] = deepcopy(map_A[letter])
         else:
             for mappedLetter in map_A[letter]:
                 if mappedLetter in map_B[letter]:
                     intersection[letter].append(mappedLetter)
-    
+
     return intersection
 
 
@@ -240,38 +240,66 @@ def bruteforceHack(message: str | None = None):
 
     message = removeNonValidChars(message)
     words: list[str] = message.upper().split()
-    ENGLISH_WORDS: dict = loadDictionary()
 
     for word in words:
-        """ 
-        We might have ended up with something like this:
-            The word was: m3SS4g3 (stands for message)
-            But after convertion it becomes: MSSG -> "0.1.1.2" pattern
-            WHICH IS WRONG!
-
-            NOTE! Correct pattern for m3SS4g3 -> "0.1.2.2.3.4.1"
-            So if we have transformed word like "m3SS4g3" into "MSSG":
-            We check whether this thing even an Enclish Word
-        """
-        if word not in ENGLISH_WORDS:
-            continue
         pattern: str = getWordPattern(word)
-        candidates: list[str] = patterns_dictionary[pattern]
+        try:
+            candidates: list[str] = patterns_dictionary[pattern]
+        except KeyError:
+            continue
+        newMapping: dict = blankLetterMapping()
         for candidate in candidates:
-            newMapping: dict = fillLetterMapping(word, candidate)
-            letterMapping = intersectLetterMapping(letterMapping, newMapping)
+            newMapping = fillLetterMapping(newMapping, word, candidate)
+            # print(f"New Mapping : \n{newMapping}")
+        letterMapping = intersectLetterMapping(letterMapping, newMapping)
+        # print(f"letter Mapping : \n{letterMapping}")
+            # os.system("pause")
     
     removeSolvedLetter(letterMapping)
     
-    encryptionKey: list[str] = [""]
+    print(letterMapping)
+
+    encryptionKey: list[str] = []
+    notUsedLetters: list[str] = []
+
+    for letter in ALPHABET:
+        notUsedLetters.append(letter)
+    print(notUsedLetters)
+
     for _, value in letterMapping.items():
-        encryptionKey.append(value)
+        print(value, type(value))
+        if value != []:
+            notUsedLetters.remove(value[0].upper())
+    print(notUsedLetters)
+
+    for letter in ALPHABET:
+        if letterMapping[letter] != []:
+            encryptionKey.append(letterMapping[letter][0].upper())
+        else:
+            encryptionKey.append(notUsedLetters[notUsedLetters.index(letter)])
+            notUsedLetters.remove(letter)
+    print(encryptionKey)
+    # for _, value in letterMapping.items():
+    #     print(f"Key ({_}) : Value ({value})")
+    #     if value != []:
+    #         encryptionKey.append(value[0])
+    
+    # if len(encryptionKey) < 26: # If not all letters was decrypted
+    #     encKeySet = set(encryptionKey)
+    #     for letter in ALPHABET:
+    #         if letter not in encKeySet:
+    #             encryptionKey.append(letter)
+
     key: str = ''.join(encryptionKey)
     
     add_clipboard(decryptSub(message, key))
     print("Decrypted message was copied into clipboard!\n")
     return
 
+
+def bruteforceHack():
+    print("Not done yet :(")
+    return
 
 def main():
     option: int = -1

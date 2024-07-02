@@ -23,18 +23,18 @@ def loadDictionary() -> dict:
     return englishWords
 
 
-def removeNonValidChars(message: str) -> str:
+def removeNonValidChars(message: str, validChars: set = LETTERS_SPACES_SET) -> str:
     """
     Removes all Non-Valid (unknown) characters from given string
 
-    Only English Alphabet letters (upper and lower case) and spaces ('*space*', '\\t', '\\n') are considered to be "VALID"
-
     :param message: String to be edited
+    :param validChars: All symbols which considered to be valid.\nBy DEFAULT only English Alphabet letters (upper and lower case) and spaces ('*space*', '\\t', '\\n') are considered to be "VALID"
+
     :return: Edited string
     """
     validString: List[str] = ['']
     for symbol in message:
-        if symbol in LETTERS_SPACES_SET:
+        if symbol in validChars:
             validString.append(symbol)
     return ''.join(validString)
 
@@ -183,8 +183,14 @@ def main():
     print(f"{world} -> {getWordPattern(world)}")
 
     PD: dict = getPatternsDictionary()
-    print(PD[getWordPattern(puppy)])
-    print(PD["0.1.1.2"])
+    print(PD[getWordPattern("this")])
+    print(PD[getWordPattern("secret")])
+    print(PD[getWordPattern("message")])
+    print(PD[getWordPattern("man")])
+    try:
+        print(PD["0.1"])
+    except KeyError:
+        print("NONE")
 
 
 
