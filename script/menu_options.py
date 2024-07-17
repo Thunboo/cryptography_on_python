@@ -107,6 +107,42 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
                 os.system("cls")
 
 
+def option_dictionaryHack(decrypt_func: Callable):
+    """
+    Asks User for a string to be Decrypted
+
+    Using English words dictionary BruteForce attacks inputted message with given Decryption function
+    
+    :param decrypt_func: Function of decryption - uses it's own type of encryption
+    """
+    my_Message = input("Enter a message to be decrypted:\n")
+    my_Message = my_Message[:len(my_Message)] # Removing '\n' symbol
+
+    EnglishWords = detect_english.loadDictionary()
+    for word in EnglishWords:
+        print(word)
+        os.system("CLS")
+        decryptedText: str = decrypt_func(message=my_Message, key=word)
+        if detect_english.isEnglish(message=decryptedText, wordPercentage=40):
+            os.system("cls")
+
+            if len(decryptedText) > 100:
+                print(f"\nPossible encrypted text (key = {word}):\n{decryptedText[:100]}...")
+            else:
+                print(f"\nPossible encrypted text (key = {word}):\n{decryptedText}")
+
+            print("Do you wish to Continue - 'C' bruteforcing message?\n")
+            print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
+            response = input(" > ")
+            if not response.strip().upper().startswith('C'):
+                add_clipboard(decryptedText)
+                print("\nLast possible decryption was copied into Clipboard\n")
+                return
+    print("Ran out of possible keys...")
+    os.system("pause")    
+    os.system("cls")
+
+
 def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_type: str = "int"):
     """
     Asks User for a .txt file to be Encrypted / Decrypted and a key
