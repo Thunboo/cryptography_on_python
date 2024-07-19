@@ -7,6 +7,16 @@ from .caesar_script import SYMBOLS
 
 LENGTH_SYMBOLS: int = len(SYMBOLS)
 
+def findModInverse(a: int, m: int) -> int | None:
+    if greatestCommonDivisor(a, m) != 1:
+        return None
+    u1 , u2 , uЗ = 1, 0, a 
+    v1 , v2 , vЗ = 0, 1, m 
+    while vЗ != 0: 
+        q = uЗ // vЗ # здесь // - это оператор целочисленного деления 
+        v1 , v2 , vЗ , u1 , u2 , uЗ = (u1 - q * v1 ), ( u2 - q * v2 ), (uЗ - q * vЗ ) , v1 , v2 , vЗ 
+    return u1 % m
+
 
 def greatestCommonDivisor(a: int, b: int) -> int:
     """
@@ -148,7 +158,7 @@ def encryptAffine(message: str, key: int) -> str | None:
     Translation_Dictionary: dict = {}
     for id in range(LENGTH_SYMBOLS):
         shiftedId = (id * key_A + key_B) % LENGTH_SYMBOLS
-        Translation_Dictionary[SYMBOLS[id]] =  SYMBOLS[shiftedId]
+        Translation_Dictionary[SYMBOLS[id]] = SYMBOLS[shiftedId]
 
 
     # Encrypting a message
@@ -187,7 +197,7 @@ def decryptAffine(message: str, key: int) -> str | None:
     # No Euclid's Magic
     for id in range(LENGTH_SYMBOLS):
         shiftedId = (id * key_A + key_B) % LENGTH_SYMBOLS
-        Translation_Dictionary[SYMBOLS[shiftedId]] =  SYMBOLS[id]
+        Translation_Dictionary[SYMBOLS[shiftedId]] = SYMBOLS[id]
 
     # Decrypting a message
     Decrypted_message: List[str] = ['']
