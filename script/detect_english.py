@@ -4,7 +4,27 @@ import os
 ALPHABET_STR: str = "abcdefghijklmnopqrstuvwxyz"
 LETTERS_SPACES: str = ALPHABET_STR + ALPHABET_STR.upper() + " \t\n"
 LETTERS_SPACES_SET: set = set(LETTERS_SPACES)
-# # # ADD function that allows to import Alphabet => All Valid Symbols from .txt
+
+
+def main():
+    message: str = "Is th15 4n 3nGl15h sentence 0r it is not?"
+    print(f"Message \"{message}\"\nIs English: {isEnglish(message=message, lettersPercentage=70)}")
+
+    puppy: str = "puppy"
+    world: str = "world"
+    print(f"{puppy} -> {getWordPattern(puppy)}")
+    print(f"{world} -> {getWordPattern(world)}")
+
+    PD: dict = getPatternsDictionary()
+    print(PD[getWordPattern("this")])
+    print(PD[getWordPattern("secret")])
+    print(PD[getWordPattern("message")])
+    print(PD[getWordPattern("man")])
+    try:
+        print(PD["0.1"])
+    except KeyError:
+        print("NONE")
+
 
 def loadDictionary() -> dict:
     """
@@ -172,27 +192,6 @@ def getPatternsDictionary() -> dict:
         return patternsDictionary
 
 # ^ Check for words patterns part ##############################
-
-def main():
-    message: str = "Is th15 4n 3nGl15h sentence 0r it is not?"
-    print(f"Message \"{message}\"\nIs English: {isEnglish(message=message, lettersPercentage=70)}")
-
-    puppy: str = "puppy"
-    world: str = "world"
-    print(f"{puppy} -> {getWordPattern(puppy)}")
-    print(f"{world} -> {getWordPattern(world)}")
-
-    PD: dict = getPatternsDictionary()
-    print(PD[getWordPattern("this")])
-    print(PD[getWordPattern("secret")])
-    print(PD[getWordPattern("message")])
-    print(PD[getWordPattern("man")])
-    try:
-        print(PD["0.1"])
-    except KeyError:
-        print("NONE")
-
-
 
 if __name__ == "__main__":
     main()

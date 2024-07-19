@@ -5,6 +5,33 @@ import os
 from . import menu_options as menu
 
 
+def main():
+    option: int = -1
+    while (True):
+        os.system("cls")
+        print("""Welcome to Transposition Cipher Master!
+    Pick an option:
+    0) Leave...
+    1) Encrypt a message
+    2) Decrypt a message with known key
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file with known key
+    6) Decrypt a file using BruteForce""")
+
+        option = int(input()[:1])
+        os.system("cls")
+        if option == 0: break
+        else:
+            if option == 1:   menu.option_encrypt(encrypt_func=encryptTransposition)
+            elif option == 2: menu.option_decrypt(decrypt_func=decryptTransposition)
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
+            elif option == 4: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "encrypt")
+            elif option == 5: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "decrypt")
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
+            os.system("pause")
+
+
 def encryptTransposition(message: str = "", key: int = 0) -> None | str:
     """
     Encrypts given string "message" with given "key"
@@ -61,33 +88,6 @@ def decryptTransposition(message: str = "", key: int = 0) -> None | str:
             row += 1
     
     return ''.join(Decrypted_message)
-
-
-def main():
-    option: int = -1
-    while (True):
-        os.system("cls")
-        print("""Welcome to Transposition Cipher Master!
-    Pick an option:
-    0) Leave...
-    1) Encrypt a message
-    2) Decrypt a message with known key
-    3) Decrypt a message using BruteForce
-    4) Encrypt a file
-    5) Decrypt a file with known key
-    6) Decrypt a file using BruteForce""")
-
-        option = int(input()[:1])
-        os.system("cls")
-        if option == 0: break
-        else:
-            if option == 1:   menu.option_encrypt(encrypt_func=encryptTransposition)
-            elif option == 2: menu.option_decrypt(decrypt_func=decryptTransposition)
-            elif option == 3: menu.option_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
-            elif option == 4: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "encrypt")
-            elif option == 5: menu.option_file(encrypt_func=encryptTransposition, decrypt_func=decryptTransposition, mode = "decrypt")
-            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptTransposition, minKeyValue=1)
-            os.system("pause")
 
 
 if __name__ == "__main__":

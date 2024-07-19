@@ -19,7 +19,8 @@ def main():
     3) Affine Cipher
     4) Simple Substitution Cipher
     5) Vigenere Cipher
-    6) ...""")
+    6) Public Key Cipher
+    7) Key Generator""")
 
         option = int(input()[:1])
         os.system("cls")

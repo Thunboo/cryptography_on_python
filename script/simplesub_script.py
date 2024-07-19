@@ -12,6 +12,53 @@ ALPHABET: list[str] = list(ALPHABET_STR.upper())
 ALPHABET_SET: set = set(ALPHABET_STR.upper())
 
 
+def main():
+    option: int = -1
+    while (True):
+        os.system("cls")
+        print("""Welcome to Simple Substitution Cipher Master!
+    Pick an option:
+    0) Leave...
+    1) Encrypt a message
+    2) Decrypt a message with known key
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file with known key""")
+
+        option = int(input()[:1])
+        os.system("cls")
+        if option == 0: break
+        else:
+            if option == 1:   menu.option_encrypt(encrypt_func=encryptSub, key_type="str")
+            elif option == 2: menu.option_decrypt(decrypt_func=decryptSub, key_type="str")
+            elif option == 3: bruteforceHack()
+            elif option == 4: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "encrypt", key_type="str")
+            elif option == 5: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "decrypt", key_type="str")
+            os.system("pause")
+
+
+def encryptSub(message: str, key: Any) -> str | None:
+    """
+    Encrypts given Message with given Key (if possible)
+    
+    :param message: Message to be encrypted
+    :param key: Encryption key 
+    :return: Either Encrypted Message or None (cannot be encrypted with given key)
+    """
+    return translateMessage(message=message, key=key, mode="encrypt")
+
+
+def decryptSub(message: str, key: Any) -> str | None:
+    """
+    Decrypts given Message with given Key (if possible)
+    
+    :param message: Message to be decrypted
+    :param key: Decryption key 
+    :return: Either Decrypted Message or None (cannot be decrypted with given key)
+    """
+    return translateMessage(message=message, key=key, mode="decrypt")
+    
+    
 def generateRandomKey() -> str:
     """
     Generates a Random Key for Simple Subtitute Cipher
@@ -123,28 +170,6 @@ def translateMessage(message: str, key: Any, mode: str) -> str | None:
 
     return ''.join(output_message)
 
-
-def encryptSub(message: str, key: Any) -> str | None:
-    """
-    Encrypts given Message with given Key (if possible)
-    
-    :param message: Message to be encrypted
-    :param key: Encryption key 
-    :return: Either Encrypted Message or None (cannot be encrypted with given key)
-    """
-    return translateMessage(message=message, key=key, mode="encrypt")
-
-
-def decryptSub(message: str, key: Any) -> str | None:
-    """
-    Decrypts given Message with given Key (if possible)
-    
-    :param message: Message to be decrypted
-    :param key: Decryption key 
-    :return: Either Decrypted Message or None (cannot be decrypted with given key)
-    """
-    return translateMessage(message=message, key=key, mode="decrypt")
-    
 #####################################################
 
 def blankLetterMapping() -> dict:
@@ -300,30 +325,6 @@ def bruteforceHack(message: str | None = None):
 def bruteforceHack():
     print("Not done yet :(")
     return
-
-def main():
-    option: int = -1
-    while (True):
-        os.system("cls")
-        print("""Welcome to Simple Substitution Cipher Master!
-    Pick an option:
-    0) Leave...
-    1) Encrypt a message
-    2) Decrypt a message with known key
-    3) Decrypt a message using BruteForce
-    4) Encrypt a file
-    5) Decrypt a file with known key""")
-
-        option = int(input()[:1])
-        os.system("cls")
-        if option == 0: break
-        else:
-            if option == 1:   menu.option_encrypt(encrypt_func=encryptSub, key_type="str")
-            elif option == 2: menu.option_decrypt(decrypt_func=decryptSub, key_type="str")
-            elif option == 3: bruteforceHack()
-            elif option == 4: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "encrypt", key_type="str")
-            elif option == 5: menu.option_file(encrypt_func=encryptSub, decrypt_func=decryptSub, mode = "decrypt", key_type="str")
-            os.system("pause")
 
 
 if __name__ == "__main__":

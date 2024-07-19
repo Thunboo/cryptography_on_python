@@ -5,6 +5,10 @@ from time import time
 from . import detect_english
 
 
+def main():
+    print("This file contains scripts for menu options")
+    
+
 def option_encrypt(encrypt_func: Callable, key_type: str = "int"):
     """
     Asks User for a string to be encrypted and a key
@@ -303,10 +307,6 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
         # After the 'for' cycle:
         if output_counter == 0: # If have not found and written any file
             os.rmdir(path=path) # Then deleting created (but empty) folder
-
-
-def main():
-    print("This file contains scripts for menu options")
 
 
 if __name__ == "__main__":

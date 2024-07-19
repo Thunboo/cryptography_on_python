@@ -7,6 +7,33 @@ from .caesar_script import SYMBOLS
 
 LENGTH_SYMBOLS: int = len(SYMBOLS)
 
+def main():
+    option: int = -1
+    while (True):
+        os.system("cls")
+        print("""Welcome to Affine Cipher Master!
+    Pick an option:
+    0) Leave...
+    1) Encrypt a message
+    2) Decrypt a message with known key
+    3) Decrypt a message using BruteForce
+    4) Encrypt a file
+    5) Decrypt a file with known key
+    6) Decrypt a file using BruteForce""")
+
+        option = int(input()[:1])
+        os.system("cls")
+        if option == 0: break
+        else:
+            if option == 1:   menu.option_encrypt(encrypt_func=encryptAffine)
+            elif option == 2: menu.option_decrypt(decrypt_func=decryptAffine)
+            elif option == 3: menu.option_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
+            elif option == 4: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "encrypt")
+            elif option == 5: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "decrypt")
+            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
+            os.system("pause")
+
+
 def findModInverse(a: int, m: int) -> int | None:
     if greatestCommonDivisor(a, m) != 1:
         return None
@@ -208,33 +235,6 @@ def decryptAffine(message: str, key: int) -> str | None:
             Decrypted_message.append(symbol)
     
     return ''.join(Decrypted_message)
-
-
-def main():
-    option: int = -1
-    while (True):
-        os.system("cls")
-        print("""Welcome to Affine Cipher Master!
-    Pick an option:
-    0) Leave...
-    1) Encrypt a message
-    2) Decrypt a message with known key
-    3) Decrypt a message using BruteForce
-    4) Encrypt a file
-    5) Decrypt a file with known key
-    6) Decrypt a file using BruteForce""")
-
-        option = int(input()[:1])
-        os.system("cls")
-        if option == 0: break
-        else:
-            if option == 1:   menu.option_encrypt(encrypt_func=encryptAffine)
-            elif option == 2: menu.option_decrypt(decrypt_func=decryptAffine)
-            elif option == 3: menu.option_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
-            elif option == 4: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "encrypt")
-            elif option == 5: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "decrypt")
-            elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
-            os.system("pause")
 
 
 if __name__ == "__main__":

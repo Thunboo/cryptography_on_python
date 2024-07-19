@@ -5,6 +5,13 @@ from .affine_script import (
     findModInverse        as FMI
     )
 
+SEPARATOR: str = "____"
+
+def main():
+    print("Generating two keys...")
+    makeKeyFiles(name=getName(), keysize=getKeysize())
+    print("Done!")
+
 
 def generateKey(keysize: int = 1024) -> tuple[int, int]:
     '''
@@ -71,16 +78,16 @@ def makeKeyFiles(name: str = 'new', keysize: int = 1024):
     filename: str = './keys/' + name + '_publicKey.txt'
     
     file_obj = open(file=filename, mode='w')
-    file_obj.write(f"Key Size: {keysize}\nPublic Key Parts:\n\
-                   {publicKey[0]}\n_____________\n{publicKey[1]}")
+    file_obj.write(f"Key Size: {keysize}\n{SEPARATOR}\nPublic Key Parts:\n{SEPARATOR}\n")
+    file_obj.write(f"{publicKey[0]}\n{SEPARATOR}\n{publicKey[1]}")
     file_obj.close()
 
     # Saving Private Key into a File
     filename: str = './keys/' + name + '_privateKey.txt'
     
     file_obj = open(file=filename, mode='w')
-    file_obj.write(f"Key Size: {keysize}\nPrivate Key Parts:\n\
-                   {privateKey[0]}\n_____________\n{privateKey[1]}")
+    file_obj.write(f"Key Size: {keysize}\n{SEPARATOR}\nPrivate Key Parts:\n{SEPARATOR}\n")
+    file_obj.write(f"{privateKey[0]}\n{SEPARATOR}\n{privateKey[1]}")
     file_obj.close()
 
 
@@ -103,12 +110,6 @@ You can also just hit 'ENTER' to use basic 1024 bits")
             return 1024
     except Exception:
         return 1024
-
-
-def main():
-    print("Generating two keys...")
-    makeKeyFiles(name=getName(), keysize=getKeysize())
-    print("Done!")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,10 @@
 import math, random # random -> secrets
 from typing import List
 
+def main():
+    # Test
+    print(primeSieve(109))
+
 
 def isPrimeTrivial(num: int) -> bool:
     '''
@@ -113,5 +117,4 @@ def generateLargePrime(keysize: int = 1024) -> int:
 
 
 if __name__ == "__main__":
-    # Test
-    print(primeSieve(109))
+    main()
