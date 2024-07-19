@@ -5,6 +5,7 @@ import script.affine_script as affine
 import script.simplesub_script as simpSub
 import script.vigenere_script as vigenere
 import script.genPublicPrivateKeys as generateKeys
+import script.publickey_script as publicKey
 
 def main():
     option: int = -1
@@ -31,9 +32,7 @@ def main():
             elif option == 3: affine.main()
             elif option == 4: simpSub.main()
             elif option == 5: vigenere.main()
-            elif option == 6: 
-                print("Nothing here yet...\n")
-                os.system("pause")
+            elif option == 6: publicKey.main()
             elif option == 7: generateKeys.main()
 
 

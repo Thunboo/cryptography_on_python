@@ -11,6 +11,7 @@ def main():
     print("Generating two keys...")
     makeKeyFiles(name=getName(), keysize=getKeysize())
     print("Done!")
+    os.system("pause")
 
 
 def generateKey(keysize: int = 1024) -> tuple[int, int]:
