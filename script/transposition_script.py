@@ -46,14 +46,14 @@ def encryptTransposition(message: str = "", key: int = 0) -> None | str:
         raise Exception("No text was provided...")
 
     # Encrypting message
-    Encrypted_message: str = ""
+    Encrypted_message: List[str] = [""]
     for column in range(key):
         for row in range(ceil(length / key)):
             index: int = row * key + column
             if index < length:
-                Encrypted_message += message[index]
+                Encrypted_message.append(message[index])
     
-    return Encrypted_message
+    return ''.join(Encrypted_message)
 
 
 def decryptTransposition(message: str = "", key: int = 0) -> None | str:

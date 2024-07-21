@@ -14,8 +14,12 @@ def main():
     os.system("pause")
 
 
-def generateKey(keysize: int = 1024) -> tuple[int, int]:
+def generateKey(keysize: int = 1024) -> tuple[tuple[int, int], tuple[int, int]]:
     '''
+    Generates Two pairs of Keys:
+        1) Public Key Pair\n
+        2) Private Key Pair\n
+
     :param keysize: Amount of bits given to key generator
     :return: Tuple containing both Public and Private Keys
     '''

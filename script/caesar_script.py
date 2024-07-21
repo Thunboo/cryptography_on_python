@@ -1,4 +1,5 @@
 import os
+from typing import List
 from . import menu_options as menu
 
 
@@ -113,11 +114,11 @@ def decryptCaesar(message: str = "", key: int = 0) -> None | str:
         Translation_Dictionary[NEW_alphabet[symbol_id]] = SYMBOLS[symbol_id]
 
     # Encrypting a message
-    Decrypted_message: str = ""
+    Decrypted_message: List[str] = [""]
     for i in range(len(message)):
-        Decrypted_message += Translation_Dictionary[message[i]]
+        Decrypted_message.append(Translation_Dictionary[message[i]])
 
-    return Decrypted_message
+    return ''.join(Decrypted_message)
 
 
 if __name__ == "__main__":

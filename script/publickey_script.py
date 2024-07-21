@@ -42,12 +42,17 @@ def main():
                                           blockSize=getBlockSize())
             elif option == 4: decryptFile(messageFilename=getFilename("Message"), 
                                           keyFilename=getFilename("Keys"))
+            print("DONE !")
             os.system("pause")
 
 
 def getBlocksFromText(message: str, blockSize: int) -> List[int]:
     '''
-    ...
+    Divides given message into Blocks with given blockSize
+
+    Each block represents given STRING text in INTEGER type data
+
+    All block then represented as an ARRAY of INTs
     '''
     for symbol in message:
         if symbol not in SYMBOLS_DICT:
@@ -70,7 +75,13 @@ def getBlocksFromText(message: str, blockSize: int) -> List[int]:
 
 def getTextFromBlocks(blockInts: List[int], messageLength: int, blockSize: int) -> str:
     '''
-    ...
+    With given ARRAY of INTs representing Blocks of initial message 
+    
+    Each block is limited with given blockSize
+
+    Each block represents initial STRING text in INTEGER type data
+
+    Using given initial message length translates Blocks back to readable STRING text
     '''
     message: List[str] = []
     
@@ -85,10 +96,14 @@ def getTextFromBlocks(blockInts: List[int], messageLength: int, blockSize: int) 
     return ''.join(message)
 
 
-def encryptMessage(message: str, key: tuple[int, int], blockSize: int) -> List[int]:
+def encryptMessage(message: str, key: tuple[int, int], blockSize: int | None) -> List[int]:
     '''
-    ...
+    Encrypts Message with Public Key and given blockSize
+
+    NOTE: If not given, encrypts data with 256 BlockSize
     '''
+    if blockSize == None: blockSize = 256
+
     encryptedBlocks: List[int] = []
     n, e = key
 
@@ -99,10 +114,15 @@ def encryptMessage(message: str, key: tuple[int, int], blockSize: int) -> List[i
     return encryptedBlocks
 
 
-def decryptMessage(encryptedBlocks: List[int], messageLength: int, key: tuple[int, int], blockSize: int) -> List[int]:
+def decryptMessage(encryptedBlocks: List[int], messageLength: int, key: tuple[int, int], blockSize: int | None) -> str:
     '''
-    ...
+    Decrypts Encrypted Message represented as ARRAY of Encypted INTs 
+    Using Private Key, Length of Initial Message and blockSize
+
+    NOTE: If not given, encrypts data with 256 BlockSize
     '''
+    if blockSize == None: blockSize = 256
+    
     decryptedBlocks: List[int] = []
     n, d = key
 
@@ -115,12 +135,11 @@ def decryptMessage(encryptedBlocks: List[int], messageLength: int, key: tuple[in
 
 def readKeyFromFile(keyFilename: str) -> tuple[int, int, int]:
     '''
-
     File should be formated as if it was created using genPublicPrivateKeys.py script !
     
     :return: Tuple with either Public or Private keys
     ''' 
-    file_obj = open(keyFilename)
+    file_obj = open("./keys/" + keyFilename)
     content: List[str] = file_obj.read().replace('\n', '').split(SEPARATOR)
     keySize: int = int(content[0].split(' ')[-1])
     keyType: str = content[1].split(' ')[0]
@@ -209,7 +228,7 @@ def encryptFile(messageFilename: str, keyFilename: str, blockSize: int | None = 
         print("ERROR !!!\nBlock size is too large for the key and symbol set size.")
         sys.exit()
 
-    file_obj = open(messageFilename, 'r')
+    file_obj = open("./messages/" + messageFilename, 'r')
     message: str = file_obj.read()
     file_obj.close()
 
@@ -222,7 +241,7 @@ def encryptFile(messageFilename: str, keyFilename: str, blockSize: int | None = 
     encryptedContent = ','.join(encryptedBlocks)
     encryptedContent = f"{len(message)}_{blockSize}_{encryptedContent}"
 
-    file_obj = open(encryptedMessageFilename, 'w')
+    file_obj = open("./messages/" + encryptedMessageFilename, 'w')
     file_obj.write(encryptedContent)
     file_obj.close()
 
@@ -304,7 +323,7 @@ def decryptFile(messageFilename: str, keyFilename: str):
 
     keySize, n, d = readKeyFromFile(keyFilename)
 
-    file_obj = open(messageFilename, 'r')
+    file_obj = open("./messages/" + messageFilename, 'r')
     content: str = file_obj.read()
     file_obj.close()
     msgLen, blockSize, encryptedMessage = content.split('_')
@@ -322,7 +341,7 @@ def decryptFile(messageFilename: str, keyFilename: str):
     
     message: str = decryptMessage(encryptedBlocks, msgLen, (n, d), blockSize)
 
-    file_obj = open(decryptedMessageFilename, 'w')
+    file_obj = open("./messages/" + decryptedMessageFilename, 'w')
     file_obj.write(message)
     file_obj.close()
 
@@ -381,9 +400,9 @@ def getFilename(purpose: str) -> str:
     '''
     :param purpose: Either 'Message' or 'Keys'
     '''
-    print(f"Enter {purpose} .txt file filename")
+    print(f"Enter {purpose} .txt file filename\n(without .txt part)")
     filename: str = input(" > ")
-    return filename
+    return filename + ".txt"
 
 def getBlockSize() -> int | None:
     print("Enter a BlockSize for encryption:\n\
@@ -397,7 +416,7 @@ You can also just hit 'ENTER' to use basic size") # 'ENTER' key => Exception
             print("Value is TOO BIG !\nUsing 256 Bits\n")
             return 256
     except Exception:
-        return 256
+        return None
 
 ########################
 

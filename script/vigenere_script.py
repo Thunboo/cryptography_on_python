@@ -30,8 +30,7 @@ def main():
     4) Decrypt a message using BruteForce (Kasiski Method) | BROKEN !!!
     -----------------
     5) Encrypt a file
-    6) Decrypt a file with known key
-    7) Decrypt a file using BruteForce""")
+    6) Decrypt a file with known key""")
 
         option = int(input()[:1])
         os.system("cls")
@@ -41,14 +40,18 @@ def main():
             elif option == 2: menu.option_decrypt(decrypt_func=decryptVigenere, key_type="str")
             elif option == 3: menu.option_dictionaryHack(decrypt_func=decryptVigenere)
             elif option == 4: bruteForceKeyHack(encryptedMessage=getUserMessage())
-            # elif option == 5: menu.option_file(encrypt_func=encryptAffine, decrypt_func=decryptAffine, mode = "decrypt")
-            # elif option == 6: menu.option_file_bruteforce(decrypt_func=decryptAffine, minKeyValue=0, maxKeyValue=LENGTH_SYMBOLS**2)
+            elif option == 5: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "encrypt")
+            elif option == 6: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "decrypt")
             os.system("pause")
 
 
 def encryptVigenere(message: str, key: str) -> str:
     '''
-    ...
+    Encrypts given Message with given Key
+    
+    :param message: Message to be encrypted
+    :param key: Encryption key 
+    :return: Encrypted Message
     '''
     Encrypted_message: List[str] = ['']
     key = key.upper()
@@ -74,7 +77,11 @@ def encryptVigenere(message: str, key: str) -> str:
 
 def decryptVigenere(message: str, key: str) -> str:
     '''
-    ...
+    Decrypts given Message with given Key
+    
+    :param message: Message to be decrypted
+    :param key: Decryption key 
+    :return: Decrypted Message
     '''
     Decrypted_message: List[str] = ['']
     key = key.upper()
@@ -115,7 +122,6 @@ def getLetterCount(message: str) -> dict:
             counterDict[letter] += 1
     return counterDict
 
-
 def getFrequencyOrder(message: str) -> str:
     '''
     For a given Message returns a string of all Letters appearing in Message in descending order
@@ -142,7 +148,6 @@ def getFrequencyOrder(message: str) -> str:
     orderList.sort(key=lambda x: (x[1], ETAOIN.find(x[0])), reverse=True)
     return ''.join(item[0] for item in orderList)
     # JOKE :) # return ''.join(item[0] for item in sorted(list(letterToFreq.items()), key=lambda x: (x[1], ETAOIN.find(x[0])), reverse=True))
-
 
 def getEngFrequencyMatchScore(message: str) -> int:
     '''
@@ -267,6 +272,13 @@ def getNthLetterSubstring(message: str, nth: int, keyLen: int) -> str:
 
 
 def attemptHackKeyLen(encryptedMessage: str, possibleKeyLength: int) -> str | None:
+    '''
+    This function attempts to Hack given Encrypted message with given Possible Key Length
+
+    :param encryptedMessage: Message to be decrypted while hacking
+    :param possibleKeyLength: Length of possible Encryption Key
+    :return: Either Decrypted Message or None (cannot be encrypted with given key)
+    '''
     encryptedMessageUP = encryptedMessage.upper()
     messageLen: int = len(encryptedMessage)
     
@@ -327,7 +339,11 @@ def attemptHackKeyLen(encryptedMessage: str, possibleKeyLength: int) -> str | No
 
 def bruteForceKeyHack(encryptedMessage: str) -> str | None:
     '''
-    ...
+    This function uses Frequency Analisys and some other cool algorithms 
+    to make BruteForce attack viable/usable
+
+    :param encryptedMessage: Message to be decrypted while hacking
+    :return: Either Decrypted Message or None (cannot be encrypted with given key)
     '''
     allPossibleKeyLens = kasiskiExamination(encryptedMessage)
     hackedMessage: str | None = None
