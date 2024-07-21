@@ -1,6 +1,6 @@
 from typing import Callable
 from pyperclip import copy as add_clipboard
-import os
+import os, sys
 from time import time
 from . import detect_english
 
@@ -167,6 +167,33 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_t
     if not os.path.exists(filename):
         print(f"{filename} \ndoes not exist...")
         return
+    
+    # TO BE DONE LATER...
+    '''
+    #!#!#!#!#!#!#
+    if not os.path.exists("./messages/"):
+        if os.getcwd() != 'C:\\WINDOWS\\system32':
+            print(f"ERROR !\nNo 'messages' directory was found\nWant to create one?")
+            print("Yes - 'Y'\nor\nNo - 'N'")
+            userInput = input(" > ")[:1]
+            if userInput.strip().upper().startswith('Y'):
+                os.mkdir("messages")
+                print("Directory 'messages' was created")
+                os.system("pause")
+            return
+        else:
+            print("WARNING !!!\n\
+                OPENED IN 'C:\\WINDOWS\\system32'\n\
+                PLEASE, RUN THIS SCRIPT VIA CMD, OPENED IN CURRENT DIRECTORY.\n")
+            os.system("pause")
+            sys.exit()
+
+    if not os.path.exists("./messages/" + filename):
+        print(f"ERROR !\n'{filename}' does not exist in '/messages/' directory !")
+        os.system("pause")
+        return
+    #!#!#!#!#!#!#
+    '''
     
     # Defining an output file name
     output_filename: str = filename[:len(filename) - 4] + "." + mode + "ed.txt"

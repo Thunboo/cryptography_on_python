@@ -193,8 +193,8 @@ def encryptFile(messageFilename: str, keyFilename: str, blockSize: int | None = 
             print("Yes - 'Y'\nor\nNo - 'N'")
             userInput = input(" > ")[:1]
             if userInput.strip().upper().startswith('Y'):
-                os.mkdir("keys")
-                print("Directory 'keys' was created")
+                os.mkdir("messages")
+                print("Directory 'messages' was created")
                 os.system("pause")
             return
         else:
@@ -295,8 +295,8 @@ def decryptFile(messageFilename: str, keyFilename: str):
             print("Yes - 'Y'\nor\nNo - 'N'")
             userInput = input(" > ")[:1]
             if userInput.strip().upper().startswith('Y'):
-                os.mkdir("keys")
-                print("Directory 'keys' was created")
+                os.mkdir("messages")
+                print("Directory 'messages' was created")
                 os.system("pause")
             return
         else:
