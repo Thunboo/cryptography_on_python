@@ -22,6 +22,7 @@ def main():
     1) Encrypt a message
     2) Decrypt a message with known key
     3) Decrypt a message using BruteForce
+    -----------------
     4) Encrypt a file
     5) Decrypt a file with known key""")
 
@@ -37,7 +38,7 @@ def main():
             os.system("pause")
 
 
-def encryptSub(message: str, key: Any) -> str | None:
+def encryptSub(message: str, key: str | Any) -> str | None:
     """
     Encrypts given Message with given Key (if possible)
     
@@ -48,7 +49,7 @@ def encryptSub(message: str, key: Any) -> str | None:
     return translateMessage(message=message, key=key, mode="encrypt")
 
 
-def decryptSub(message: str, key: Any) -> str | None:
+def decryptSub(message: str, key: str | Any) -> str | None:
     """
     Decrypts given Message with given Key (if possible)
     
@@ -74,7 +75,7 @@ def generateRandomKey() -> str:
     return key
 
 
-def isValid(key: Any) -> bool:
+def isValid(key: str | Any) -> bool:
     """
     Checks whether Key can be used to translate message
 

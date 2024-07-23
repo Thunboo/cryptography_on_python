@@ -34,15 +34,23 @@ def main():
             os.system("pause")
 
 
-def findModInverse(a: int, m: int) -> int | None:
-    if greatestCommonDivisor(a, m) != 1:
+def findModInverse(a: int, b: int) -> int | None:
+    """
+    For given modular expression: (a * i) % b = 1
+    
+    Finds i value using Euclid's algorithm
+    """
+    # There can't be a modular inverse for coprime A and B values
+    if greatestCommonDivisor(a, b) != 1:
         return None
-    u1 , u2 , uЗ = 1, 0, a 
-    v1 , v2 , vЗ = 0, 1, m 
-    while vЗ != 0: 
-        q = uЗ // vЗ # здесь // - это оператор целочисленного деления 
-        v1 , v2 , vЗ , u1 , u2 , uЗ = (u1 - q * v1 ), ( u2 - q * v2 ), (uЗ - q * vЗ ) , v1 , v2 , vЗ 
-    return u1 % m
+    
+    # Euclid's MAGIC ✨
+    u1, u2, u3 = 1, 0, a
+    v1, v2, v3 = 0, 1, b
+    while v3 != 0:
+        q = u3 // v3
+        v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
+    return u1 % b
 
 
 def greatestCommonDivisor(a: int, b: int) -> int:
@@ -57,27 +65,6 @@ def greatestCommonDivisor(a: int, b: int) -> int:
         a, b = b % a, a
     return b
 
-
-# def modularInverse(a: int, b: int) -> int | None:
-    """
-    For given modular expression: (a * i) % b = 1
-    
-    Finds i value using Euclid's algorithm
-    """
-    
-    # There can't be a modular inverse for coprime A and B values
-    if greatestCommonDivisor(a, b) != 1:
-        return None
-    
-    # Euclid's MAGIC ✨
-    u1, u2, u3 = 1, 0, a
-    v1, v2, v3 = 0, 1, b
-    while v3 != 0:
-        q = u3 // v3
-        v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
-    
-    return u1 % b
-    
 
 def isValid(key: int) -> bool:
     """

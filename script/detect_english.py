@@ -87,11 +87,11 @@ def isEnglish(message: str, wordPercentage: float = 20, lettersPercentage: float
     Checks whether the given message is written in English
 
     ! NOTE:
-    Message is treated as "English" if:
+    Message is treated as "English" if (BASIC VALUES):
 
         1) There is at least 20% of English words in Message
 
-        2) At least 85% of Symbols in Message are English alphabet characters
+        2) At least 75% of Symbols in Message are English alphabet characters
 
     :param message: String being checked
     :return: True ? False | Message either is English or not

@@ -107,8 +107,6 @@ def option_bruteforce(decrypt_func: Callable, minKeyValue: int = 0, maxKeyValue:
                     add_clipboard(decryptedText)
                     print("\nLast possible decryption was copied into Clipboard\n")
                     break
-                
-                os.system("cls")
 
 
 def option_dictionaryHack(decrypt_func: Callable):
@@ -144,12 +142,12 @@ def option_dictionaryHack(decrypt_func: Callable):
                 return
     print("Ran out of possible keys...")
     os.system("pause")    
-    os.system("cls")
 
 
 def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_type: str = "int"):
     """
     Asks User for a .txt file to be Encrypted / Decrypted and a key
+    NOTE: File should be in '/messages/' directory
 
     Calls given Encrypting / Decrypting function
     
@@ -159,18 +157,7 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_t
     :param decrypt_func: Function for Decrypting data
     :param mode: Can be either "encrypt" or "decrypt"
     """
-    # print(os.getcwd()) # FOR DEBUGGING PURPOSES
 
-    # Inputting a file name
-    filename: str = input("Input path to a Filename: (file.txt)\n")
-    filename = filename[:len(filename)] # Removing '\n' symbol
-    if not os.path.exists(filename):
-        print(f"{filename} \ndoes not exist...")
-        return
-    
-    # TO BE DONE LATER...
-    '''
-    #!#!#!#!#!#!#
     if not os.path.exists("./messages/"):
         if os.getcwd() != 'C:\\WINDOWS\\system32':
             print(f"ERROR !\nNo 'messages' directory was found\nWant to create one?")
@@ -188,18 +175,20 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_t
             os.system("pause")
             sys.exit()
 
+    # Inputting a file name
+    filename: str = input(f"Input a Filename with data to be {mode}ed: (*name*.txt)\n > ")
+    filename = filename[:len(filename)] + ".txt" # Removing '\n' symbol and adding .txt
+    
     if not os.path.exists("./messages/" + filename):
         print(f"ERROR !\n'{filename}' does not exist in '/messages/' directory !")
         os.system("pause")
         return
-    #!#!#!#!#!#!#
-    '''
     
     # Defining an output file name
-    output_filename: str = filename[:len(filename) - 4] + "." + mode + "ed.txt"
+    output_filename: str = filename[:len(filename) - 4] + "_" + mode + "ed.txt"
 
     # Checking whether there is already a file with same name
-    if os.path.exists(output_filename):
+    if os.path.exists("./messages/" + output_filename):
         print(f"This will overwrite \n'{output_filename}'\n")
         print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
         response = input(" > ")
@@ -208,12 +197,14 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_t
         
     # Inputting an int key value
     if key_type == "int":
-        key: int = int(input("Enter a key\n"))
+        key: int = int(input(f"Enter a key ({key_type})\n > "))
+    elif key_type == "str":
+        key: str = input(f"Enter a key ({key_type})\n > ")
     else:
         key: int = -1
 
     # Opening file, reading it, closing it
-    file_obj = open(file=filename, mode='r')
+    file_obj = open(file="./messages/" + filename, mode='r')
     content = file_obj.read()
     file_obj.close()
     
@@ -228,7 +219,7 @@ def option_file(encrypt_func: Callable, decrypt_func: Callable, mode: str, key_t
     print(f"{mode.capitalize()}ion time: {time() - start_time}")
 
     # Opening output file, writing translated text into it, closing it
-    output_file_obj = open(file=output_filename, mode='w')
+    output_file_obj = open(file="./messages/" + output_filename, mode='w')
     output_file_obj.write(translated_content)
     output_file_obj.close()
     
@@ -249,21 +240,54 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
     NOTE: If (maxKeyValue = "len(message)") is passed - uses length of inputed messaged during work
     """
 
+    if not os.path.exists("./messages/"):
+        if os.getcwd() != 'C:\\WINDOWS\\system32':
+            print(f"ERROR !\nNo 'messages' directory was found\nWant to create one?")
+            print("Yes - 'Y'\nor\nNo - 'N'")
+            userInput = input(" > ")[:1]
+            if userInput.strip().upper().startswith('Y'):
+                os.mkdir("messages")
+                print("Directory 'messages' was created")
+                os.system("pause")
+            return
+        else:
+            print("WARNING !!!\n\
+                OPENED IN 'C:\\WINDOWS\\system32'\n\
+                PLEASE, RUN THIS SCRIPT VIA CMD, OPENED IN CURRENT DIRECTORY.\n")
+            os.system("pause")
+            sys.exit()
+
     # Inputting a file name
-    filename: str = input("Input path to a Filename: (file.txt)\n")
-    filename = filename[:len(filename)] # Removing '\n' symbol
-    if not os.path.exists(filename):
-        print(f"{filename} \ndoes not exist...")
+    filename: str = input("Input a Filename with data to be Bruteforced: (*name*.txt)\n > ")
+    filename = filename[:len(filename)] + ".txt" # Removing '\n' symbol
+    
+    if not os.path.exists("./messages/" + filename):
+        print(f"ERROR !\n'{filename}' does not exist in '/messages/' directory !")
+        os.system("pause")
         return
     
+    # Defining an output file name
+    output_filename: str = filename[:len(filename) - 4] + "_bruteforced.txt"
+
+    # Checking whether there is already a file with same name
+    if os.path.exists("./messages/" + output_filename):
+        print(f"This will overwrite \n'{output_filename}'\n")
+        print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
+        response = input(" > ")
+        if not response.strip().upper().startswith('C'):
+            return
+        
     # Opening file, reading it, closing it
-    file_obj = open(file=filename, mode='r')
+    file_obj = open(file="./messages/" + filename, mode='r')
     content = file_obj.read()
     file_obj.close()
     
+    if maxKeyValue == "len(message)":
+        maxKeyValue: int = len(content)
+    
     # English text detection feature : ON / OFF ?
     detection = True
-    print("\nDo you wish to disable English text detection?\n")
+    print("\nDo you wish to DISABLE English text detection?\n")
     print("Yes - 'Y'\nor\nNo - 'N'")
     userInput = input(" > ")[:1]
     if userInput.strip().upper().startswith('Y'):
@@ -279,8 +303,8 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
     else:
         # Here we will show to the User all found outcomes from decrypting one-by-one
         # But only if they meet the requirement of being English Text - 'isEnglish' function
-        output_counter: int = 0
-
+        
+        '''
         # Creating a directory to store files
         newFolder: str = "BruteForce_Decryption_Output"
         curDir: str = os.getcwd()
@@ -291,49 +315,53 @@ def option_file_bruteforce(decrypt_func: Callable,  minKeyValue: int, maxKeyValu
         # If os.mkdir failed 
         if not os.path.exists(path):
             raise Exception("FAILED CREATING AN OUTPUT DIRECTORY")
+        '''
 
         # Looping through all possible keys
-        if maxKeyValue == "len(message)":
-            maxKeyValue = len(content)
-
         for key in range(minKeyValue, maxKeyValue):
             # Get a variant of decrypted text
             decryptedText = decrypt_func(message=content, key=key)
             
-            # Some decryption functions may return None if decryption with given key is impossible
+            # Some decryption functions may return None if decryption with given key is improper for decrypting
             if decryptedText == None:
                 continue
+            
+            if not detect_english.isEnglish(message=decryptedText):
+                continue
+            
+            # If text meets the requirement of being English Text
+            os.system("cls")
+            print(f"\nPossible encrypted text (key = {key}):\n{decryptedText[:50]}...\n")
 
-            # Check whether it meets the requirement of being English Text
-            if detect_english.isEnglish(message=decryptedText):
-                os.system("cls")
+            # Ask whether User wants to Save this output
+            print("Do you wish to Save - 'S' bruteforced message?\n")
+            print("Save - 'S'\nOr\nNot - 'N'\n???")
+            response = input(" > ")
 
-                print(f"\nPossible encrypted text (key = {key}):\n{decryptedText[:100]}...\n")
-
-                # Defining an output file name, considering counter of already written files
-                output_filename: str = filename[:len(filename) - 4] + ".decrypted_" + str(output_counter) + ".txt"
-                outputPath: str = path + "\\" + output_filename 
-
-                # Opening output file, writing translated text into it, closing it. Incrementing counter of outputed files
-                output_file_obj = open(file=outputPath, mode='w')
+            # If User picks to Save text
+            if response.strip().upper().startswith('S'):
+                # Checking if file with that name already exists
+                if os.path.exists("./messages/" + output_filename):
+                    print(f"This will overwrite \n'{output_filename}'\n")
+                    print("Save Anyway - 'S'\nOr\nNot - 'N'\n???")
+                    response = input(" > ")
+                    
+                    # If User picks to NOT Overwrite
+                    if not response.strip().upper().startswith('S'):
+                        continue
+                
+                output_file_obj = open(file="./messages/" + output_filename, mode='w')
                 output_file_obj.write(decryptedText)
                 output_file_obj.close()
-                output_counter += 1
-                
+            
                 # Message, that script has successfully Decrypted and Written text into output_file
-                print(f"Decrypted '{filename}' into '/{newFolder}/{output_filename}'\n")
-
-                print("Do you wish to Continue - 'C' bruteforcing message?\n")
-                print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
-                response = input(" > ")
-                if not response.strip().upper().startswith('C'): # If User choosen NOT to Continue BruteForcing
-                    break
-                
-                os.system("cls")
-        
-        # After the 'for' cycle:
-        if output_counter == 0: # If have not found and written any file
-            os.rmdir(path=path) # Then deleting created (but empty) folder
+                print(f"Decrypted '/messages/{filename}' into '/messages/{output_filename}'\n")
+            
+            print("Do you wish to Continue - 'C' bruteforcing message?\n")
+            print("Continue - 'C'\nOr\nQuit - 'Q'\n???")
+            response = input(" > ")
+            if not response.strip().upper().startswith('C'): # If User choosen NOT to Continue BruteForcing
+                break
 
 
 if __name__ == "__main__":

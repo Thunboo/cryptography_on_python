@@ -42,7 +42,6 @@ def main():
                                           blockSize=getBlockSize())
             elif option == 4: decryptFile(messageFilename=getFilename("Message"), 
                                           keyFilename=getFilename("Keys"))
-            print("DONE !")
             os.system("pause")
 
 

@@ -40,8 +40,8 @@ def main():
             elif option == 2: menu.option_decrypt(decrypt_func=decryptVigenere, key_type="str")
             elif option == 3: menu.option_dictionaryHack(decrypt_func=decryptVigenere)
             elif option == 4: bruteForceKeyHack(encryptedMessage=getUserMessage())
-            elif option == 5: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "encrypt")
-            elif option == 6: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "decrypt")
+            elif option == 5: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "encrypt", key_type="str")
+            elif option == 6: menu.option_file(encrypt_func=encryptVigenere, decrypt_func=decryptVigenere, mode = "decrypt", key_type="str")
             os.system("pause")
 
 
