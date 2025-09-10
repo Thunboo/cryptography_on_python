@@ -66,7 +66,7 @@ def encryptCaesar(message: str = "", key: int = 0) -> None | str:
     NEW_alphabet: str = SYMBOLS[key:] + SYMBOLS[:key]
     Translation_Dictionary: dict = {}
 
-    # Defining the trnsformation of every letter in alphabet
+    # Defining the transformation of every letter in alphabet
     for symbol_id in range(len(SYMBOLS)):
         # key "Symbol" -> "Shifted Symbol"
         Translation_Dictionary[SYMBOLS[symbol_id]] = NEW_alphabet[symbol_id]
