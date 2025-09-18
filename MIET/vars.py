@@ -9,4 +9,4 @@ def prepare_text(text: str):
     '''
     Пробелы не учитываются -> убираем их, точки и запятые заменяются на ТЧК и ЗПТ
     '''
-    return text.replace(' ', '').replace('.', 'тчк').replace(',', 'зпт')
+    return text.lower().replace(' ', '').replace('.', 'тчк').replace(',', 'зпт')
