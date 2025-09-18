@@ -74,14 +74,20 @@ def ciph_decode(ciphertext, key1, key2: str) -> str:
                 (letter_to_number[output[i]] + letter_to_number[gamma2[i]]) % ALPHABET_LENGTH
             ])
         gamma2.append(output[-1])
-        # print(output[-1], gamma[-1], gamma2[-1])
+        # print(f"{ciphertext[i]} - {gamma[-2]} = {output[-1]} + {gamma2[-2]} = {gamma[-1]}")
+#         print(f"{letter_to_number[ciphertext[i]]} - {letter_to_number[gamma[-2]]} \
+# = {letter_to_number[output[-1]]} + {letter_to_number[gamma2[-2]]} = \
+# {letter_to_number[gamma[-1]]}")
+        # input()
     return ''.join(output)
 
 if __name__ == '__main__':
-    txt = 'ежз'
-    print(encode(txt, 'Х')) 
-    print(ciph_encode(txt, 'Х', 'У'))
-    print(ciph_decode(ciph_encode(txt, 'Х', 'У'), 'Х', 'У'))
+    txt = TEXT
+    print(encode(txt, 'А')) 
+    
+    print(ciph_encode(txt, 'А', 'А'))
+    print(ciph_decode(ciph_encode(txt, 'А', 'А'), 'А', 'А'))
+    # print(ciph_decode('ыджжу яалхс фжаяс ьпяир вкбнп жшэци шычбк дфион ркмцр пшзиг цтдчу', 'Д', 'О'))
     # print(decode(encode(txt, 'Х'), 'Х'))
     # print(encode(encode(txt, 'Б'), 'Б'))
     # print(decode(decode(encode(encode(txt, 'Б'), 'Б'), 'Б'), 'Б')) 
